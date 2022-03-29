@@ -21,8 +21,12 @@ import com.example.voicebiolibs.module.AddVoiceId;
 import com.example.voicebiolibs.module.AddVoiceIdResultResponse;
 import com.example.voicebiolibs.module.AudioCheckResultResponse;
 import com.example.voicebiolibs.module.CheckAudio;
+import com.example.voicebiolibs.module.EnrollUser;
+import com.example.voicebiolibs.module.EnrollUserResultResponse;
 import com.example.voicebiolibs.module.SignUp16KResultResponse;
 import com.example.voicebiolibs.module.SignUp16KVoiceId;
+import com.example.voicebiolibs.module.VerifyVoiceId;
+import com.example.voicebiolibs.module.VerifyVoiceResultResponse;
 import com.mmdev.loadingviewlib.LoadingView;
 import com.tapadoo.alerter.Alerter;
 
@@ -39,17 +43,23 @@ public class SignUpActivity extends AppCompatActivity {
     Boolean checked1 = false, checked2 = false, checked3 = false;
     File file1, file2, file3;
     TextView editText6, popUp;
+    EnrollUser enrollUser;
     SignUp16KVoiceId signUp16KVoiceId;
     AddVoiceId addVoiceId;
     ImageView btnBack;
     LoadingView loadingView;
     AddVoiceIdResultResponse resultResponse;
+    VerifyVoiceId verifyVoiceId;
+    VerifyVoiceResultResponse voiceResultResponse;
+    EnrollUserResultResponse enrollUserResultResponse;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_sign_up);
         signUp16KVoiceId = new SignUp16KVoiceId();
         addVoiceId = new AddVoiceId();
+        enrollUser = new EnrollUser();
+        verifyVoiceId = new VerifyVoiceId();
         accessToken = getIntent().getStringExtra("access_token");
 
         phoneStr = getIntent().getStringExtra("phoneStr");
@@ -68,6 +78,7 @@ public class SignUpActivity extends AppCompatActivity {
 //            checked = "true1";
 //        }
         recordFunction1 = new RecordFunction();
+        recordFunction3 = new RecordFunction();
         initView();
     }
 
@@ -145,6 +156,38 @@ public class SignUpActivity extends AppCompatActivity {
                 alertDialog2.show();
             }
         });
+
+
+        //
+        btnRecord2.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+                enrollUser.setUserCode("0859685545");
+                enrollUserResultResponse = enrollUser.getResultResponse();
+                System.out.println("result enroll"+enrollUserResultResponse);
+            }
+        });
+
+        btnCheck3.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                verifyVoiceId.setUserCode("0859685545");
+                verifyVoiceId.setIsFilter("true");
+                verifyVoiceId.setFileName(file3);
+                voiceResultResponse = verifyVoiceId.verifyResultResponse();
+                System.out.println("verify voice:"+voiceResultResponse);
+            }
+        });
+
+
+
+
+
+        //
+
+
+
         btnRecord1.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -251,58 +294,58 @@ public class SignUpActivity extends AppCompatActivity {
 //                }.start();
 //            }
 //        });
-//        btnRecord3.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
-//                    // dir = new File (Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOCUMENTS)+ "/"+FolderName );
-//                    pathSavePCM3 = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS) + "/" + UUID.randomUUID().toString() + "_audio_record.pcm";
-//                    pathSaveWAV3 = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS) + "/" + UUID.randomUUID().toString() + "_audio_record.wav";
-//
-////                        file1 = new File (Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS)+ "/" +UUID.randomUUID().toString()+ "_audio_record.wav");
-////                        filePCM1 = new File (Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS)+ "/" +UUID.randomUUID().toString() + "_audio_record.pcm");
-//                    recordFunction3.startRecording2(pathSavePCM3, pathSaveWAV3);
-//                } else {
-//                    pathSavePCM3 = Environment.getExternalStorageDirectory().getAbsolutePath() + "/" + UUID.randomUUID().toString() + "_audio_record.pcm";
-//                    pathSaveWAV3 = Environment.getExternalStorageDirectory().getAbsolutePath() + "/" + UUID.randomUUID().toString() + "_audio_record.wav";
-//                    recordFunction3.startRecording(pathSavePCM3, pathSaveWAV3);
-//                }
-//                btnRecord3.setVisibility(View.INVISIBLE);
-//                btnStopRecord3.setVisibility(View.VISIBLE);
-//                btnStopRecord3.setEnabled(false);
-//                btnRecord1.setEnabled(false);
-//                btnRecord2.setEnabled(false);
-//                btnCheck3.setText("Check");
-//                Toast.makeText(SignUpActivity.this, "Đang ghi âm...", Toast.LENGTH_SHORT).show();
-//                Timer buttonTimer = new Timer();
-//                buttonTimer.schedule(new TimerTask() {
-//
-//                    @Override
-//                    public void run() {
-//
-//                        runOnUiThread(new Runnable() {
-//
-//                            @Override
-//                            public void run() {
-//                                btnRecord3.setEnabled(true);
-//                            }
-//                        });
-//                    }
-//                }, 500);
-//                new CountDownTimer(3000, 1000) {
-//
-//                    public void onTick(long millisUntilFinished) {
-//
-//                        //here you can have your logic to set text to edittext
-//                    }
-//
-//                    public void onFinish() {
-//                        btnStopRecord3.setEnabled(true);
-//                    }
-//
-//                }.start();
-//            }
-//        });
+        btnRecord3.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
+                    // dir = new File (Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOCUMENTS)+ "/"+FolderName );
+                    pathSavePCM3 = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS) + "/" + UUID.randomUUID().toString() + "_audio_record.pcm";
+                    pathSaveWAV3 = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS) + "/" + UUID.randomUUID().toString() + "_audio_record.wav";
+
+//                        file1 = new File (Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS)+ "/" +UUID.randomUUID().toString()+ "_audio_record.wav");
+//                        filePCM1 = new File (Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS)+ "/" +UUID.randomUUID().toString() + "_audio_record.pcm");
+                    recordFunction3.startRecording2(pathSavePCM3, pathSaveWAV3);
+                } else {
+                    pathSavePCM3 = Environment.getExternalStorageDirectory().getAbsolutePath() + "/" + UUID.randomUUID().toString() + "_audio_record.pcm";
+                    pathSaveWAV3 = Environment.getExternalStorageDirectory().getAbsolutePath() + "/" + UUID.randomUUID().toString() + "_audio_record.wav";
+                    recordFunction3.startRecording(pathSavePCM3, pathSaveWAV3);
+                }
+                btnRecord3.setVisibility(View.INVISIBLE);
+                btnStopRecord3.setVisibility(View.VISIBLE);
+                btnStopRecord3.setEnabled(false);
+                btnRecord1.setEnabled(false);
+                btnRecord2.setEnabled(false);
+                btnCheck3.setText("Check");
+                Toast.makeText(SignUpActivity.this, "Đang ghi âm...", Toast.LENGTH_SHORT).show();
+                Timer buttonTimer = new Timer();
+                buttonTimer.schedule(new TimerTask() {
+
+                    @Override
+                    public void run() {
+
+                        runOnUiThread(new Runnable() {
+
+                            @Override
+                            public void run() {
+                                btnRecord3.setEnabled(true);
+                            }
+                        });
+                    }
+                }, 500);
+                new CountDownTimer(3000, 1000) {
+
+                    public void onTick(long millisUntilFinished) {
+
+                        //here you can have your logic to set text to edittext
+                    }
+
+                    public void onFinish() {
+                        btnStopRecord3.setEnabled(true);
+                    }
+
+                }.start();
+            }
+        });
 //
         btnStopRecord1.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -399,52 +442,52 @@ public class SignUpActivity extends AppCompatActivity {
 //        });
 //
 //
-//        btnStopRecord3.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                try {
-//                    recordFunction3.stopRecording(pathSavePCM3);
-//                } catch (IOException e) {
-//                    e.printStackTrace();
-//                }
-//                //mediaRecorder.stop();
-//                btnRecord3.setVisibility(View.VISIBLE);
-//                btnStopRecord3.setVisibility(View.INVISIBLE);
-//
-//
-//                btnRecord2.setEnabled(true);
-//                btnRecord1.setEnabled(true);
-//
-////                btnPlay1.setEnabled(true);
-////                btnPlay2.setEnabled(true);
-////                btnPlay3.setEnabled(true);
-////                btnStop1.setEnabled(true);
-////                btnStop2.setEnabled(true);
-////                btnStop3.setEnabled(true);
-//
-//                file3 = new File(pathSaveWAV3);
-////                filePCM1 = new File(pathSavePCM1);
-//
+        btnStopRecord3.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                try {
+                    recordFunction3.stopRecording(pathSavePCM3);
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+                //mediaRecorder.stop();
+                btnRecord3.setVisibility(View.VISIBLE);
+                btnStopRecord3.setVisibility(View.INVISIBLE);
+
+
+                btnRecord2.setEnabled(true);
+                btnRecord1.setEnabled(true);
+
+//                btnPlay1.setEnabled(true);
+//                btnPlay2.setEnabled(true);
 //                btnPlay3.setEnabled(true);
-//                btnCheck3.setEnabled(true);
-//                System.out.println("file path: -----------" + file3.getAbsolutePath());
-//                Timer buttonTimer = new Timer();
-//                buttonTimer.schedule(new TimerTask() {
-//
-//                    @Override
-//                    public void run() {
-//
-//                        runOnUiThread(new Runnable() {
-//
-//                            @Override
-//                            public void run() {
-//                                btnStopRecord3.setEnabled(true);
-//                            }
-//                        });
-//                    }
-//                }, 500);
-//            }
-//        });
+//                btnStop1.setEnabled(true);
+//                btnStop2.setEnabled(true);
+//                btnStop3.setEnabled(true);
+
+                file3 = new File(pathSaveWAV3);
+//                filePCM1 = new File(pathSavePCM1);
+
+                btnPlay3.setEnabled(true);
+                btnCheck3.setEnabled(true);
+                System.out.println("file path: -----------" + file3.getAbsolutePath());
+                Timer buttonTimer = new Timer();
+                buttonTimer.schedule(new TimerTask() {
+
+                    @Override
+                    public void run() {
+
+                        runOnUiThread(new Runnable() {
+
+                            @Override
+                            public void run() {
+                                btnStopRecord3.setEnabled(true);
+                            }
+                        });
+                    }
+                }, 500);
+            }
+        });
 //
         btnPlay1.setOnClickListener(new View.OnClickListener() {
             @Override

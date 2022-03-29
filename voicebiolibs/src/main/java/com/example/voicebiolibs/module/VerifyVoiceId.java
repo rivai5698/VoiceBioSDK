@@ -26,66 +26,82 @@ import retrofit2.Response;
 public class VerifyVoiceId {
 
     VerifyVoiceResultResponse responseResult = new VerifyVoiceResultResponse();
-    String phoneStr;
-    File myFileRecorder;
+    String userCode;
+    String isFilter;
+    File fileName;
 
-    public String getPhoneStr() {
-        return phoneStr;
+    public String getUserCode() {
+        return userCode;
     }
 
-    public void setPhoneStr(String phoneStr) {
-        this.phoneStr = phoneStr;
+    public void setUserCode(String userCode) {
+        this.userCode = userCode;
     }
 
-    public File getMyFileRecorder() {
-        return myFileRecorder;
+    public String getIsFilter() {
+        return isFilter;
     }
 
-    public void setMyFileRecorder(File myFileRecorder) {
-        this.myFileRecorder = myFileRecorder;
+    public void setIsFilter(String isFilter) {
+        this.isFilter = isFilter;
     }
 
-    public VerifyVoiceResultResponse verify8KResultResponse() {
+    public File getFileName() {
+        return fileName;
+    }
+
+    public void setFileName(File fileName) {
+        this.fileName = fileName;
+    }
+
+    public VerifyVoiceResultResponse verifyResultResponse() {
         ExecutorService threadPoll = Executors.newFixedThreadPool(1);
         Future<VerifyVoiceResultResponse> future = threadPoll.submit(new Callable<VerifyVoiceResultResponse>() {
             @Override
             public VerifyVoiceResultResponse call() throws Exception {
                 VerifyVoiceCommunication verifyService = ModuleProvider.self().getRetrofit().create(VerifyVoiceCommunication.class);
-                RequestBody phone = RequestBody.create(MediaType.parse("multipart/form-data"), phoneStr);
-                RequestBody requestFile = RequestBody.create(MediaType.parse("multipart/form-data"), myFileRecorder);
-                MultipartBody.Part reqFile1 = MultipartBody.Part.createFormData("file", myFileRecorder.getName(), requestFile);
-                Call<VerifyVoiceResponse> call = verifyService.verify(phone, reqFile1);
+                RequestBody user_code = RequestBody.create(MediaType.parse("multipart/form-data"), userCode);
+                RequestBody requestFile1 = RequestBody.create(MediaType.parse("multipart/form-data"), fileName);
+                MultipartBody.Part reqFile1 = MultipartBody.Part.createFormData("file", fileName.getName(), requestFile1);
+                RequestBody is_filter = RequestBody.create(MediaType.parse("multipart/form-data"), isFilter);
+                Call<VerifyVoiceResponse> call = verifyService.verify(user_code, reqFile1,is_filter);
                 Response<VerifyVoiceResponse> response = call.execute();
 
                 switch (response.code()) {
                     case 200:
-                        // System.out.println("res in: " + response.body());
-                        if (response.body().getStatus_code() == 1) {
-                            Double score = Math.round(response.body().getScore() * 100.0) / 100.0;
-                            responseResult.setScore(score);
-                            responseResult.setMsg(response.body().getMsg());
-                            responseResult.setStatus_code(response.body().getStatus_code());
-                            responseResult.setError(response.body().getError());
-                            responseResult.setCode(response.body().getCode());
-                        } else {
-                            Double score = 0.0;
-                            responseResult.setScore(score);
-                            responseResult.setMsg(response.body().getMsg());
-                            responseResult.setStatus_code(response.body().getStatus_code());
-                            responseResult.setError(response.body().getError());
-                            responseResult.setCode(response.body().getCode());
-                        }
+                         System.out.println("res in: " + response.body());
+                        responseResult.setCode(response.body().getCode());
+                        responseResult.setStatus(response.body().getStatus());
+                        responseResult.setMsg(response.body().getMsg());
+                        responseResult.setMatching(response.body().getResult().getMatching());
+                        responseResult.setIs_proofing(response.body().getIs_proofing());
+                        responseResult.setThreshold(response.body().getResult().getThreshold());
+                        responseResult.setMatching(response.body().getResult().getMatching());
+                        responseResult.setScore(response.body().getResult().getScore());
+
+//                        if (response.body().getStatus_code() == 1) {
+//                            Double score = Math.round(response.body().getScore() * 100.0) / 100.0;
+//                            responseResult.setScore(score);
+//                            responseResult.setMsg(response.body().getMsg());
+//                            responseResult.setStatus_code(response.body().getStatus_code());
+//                            responseResult.setError(response.body().getError());
+//                            responseResult.setCode(response.body().getCode());
+//                        } else {
+//                            Double score = 0.0;
+//                            responseResult.setScore(score);
+//                            responseResult.setMsg(response.body().getMsg());
+//                            responseResult.setStatus_code(response.body().getStatus_code());
+//                            responseResult.setError(response.body().getError());
+//                            responseResult.setCode(response.body().getCode());
+//                        }
                         break;
                     case 401:
                         responseResult.setMsg("Access token is wrong or missing");
-                        responseResult.setScore(0.0);
                         break;
                     case 422:
                         responseResult.setMsg("Missing params");
-                        responseResult.setScore(0.0);
                     default:
                         responseResult.setMsg("System Error");
-                        responseResult.setScore(0.0);
                         break;
                 }
                 return responseResult;
@@ -98,7 +114,8 @@ public class VerifyVoiceId {
             e.printStackTrace();
             responseResult = new VerifyVoiceResultResponse();
             responseResult.setMsg("System Error");
-            responseResult.setScore(0.0);
+            float a = 0;
+            responseResult.setScore(a);
         }
         //    System.out.println("Result: " + responseResult);
         return responseResult;

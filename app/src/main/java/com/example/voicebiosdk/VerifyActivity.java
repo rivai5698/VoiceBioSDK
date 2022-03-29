@@ -21,6 +21,8 @@ import android.widget.Toast;
 import com.example.voicebiolibs.init.RecordFunction;
 import com.example.voicebiolibs.module.Verify16KResultResponse;
 import com.example.voicebiolibs.module.Verify16KVoiceId;
+import com.example.voicebiolibs.module.VerifyVoiceId;
+import com.example.voicebiolibs.module.VerifyVoiceResultResponse;
 import com.tapadoo.alerter.Alerter;
 
 import java.io.File;
@@ -38,7 +40,7 @@ public class VerifyActivity extends AppCompatActivity {
     TextView tvGuide,tvResultPercent,textView7;
     TextView tv7;
     File fileWAV;
-    Verify16KVoiceId verify16KVoiceId;
+    VerifyVoiceId verify16KVoiceId;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -230,7 +232,7 @@ public class VerifyActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 btnBack.setEnabled(false);
-                verify16KVoiceId = new Verify16KVoiceId();
+                verify16KVoiceId = new VerifyVoiceId();
 //                btnStop.setEnabled(false);
 //                btnPlay.setEnabled(false);
 //                VerifyCommunication verifyService = NetworkProvider.self().getRetrofit().create(VerifyCommunication.class);
@@ -293,15 +295,16 @@ public class VerifyActivity extends AppCompatActivity {
                     }else {
                         System.out.println("nullFile");
                     }
-                    verify16KVoiceId.setMyFileRecorder(fileWAV);
-                    verify16KVoiceId.setPhoneStr(phoneStr);
-                Verify16KResultResponse rR = verify16KVoiceId.verify16KResultResponse();
+                    verify16KVoiceId.setFileName(fileWAV);
+                    verify16KVoiceId.setUserCode("0859685545");
+                    verify16KVoiceId.setIsFilter("true");
+                VerifyVoiceResultResponse rR = verify16KVoiceId.verifyResultResponse();
                     System.out.println("result: "+rR);
 //                Double score = verifyVoiceId.verify16KResultResponse().getScore();
                     if(rR!=null){
 
-                        String rS = rR.getError();
-                        Double rP = rR.getScore();
+                        Integer rS = rR.getStatus();
+                        Float rP = rR.getScore();
                         String rM = rR.getMsg();
                         Float rPFloat = Float.valueOf(String.valueOf(rP));
 
