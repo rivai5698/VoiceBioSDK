@@ -59,9 +59,9 @@ public class RegisterActivity extends AppCompatActivity {
                 nameStr = etName.getText().toString();
                 mailStr = etMail.getText().toString();
                 if (phoneStr.length()==10&&nameStr.length()>0&&mailStr.length()>0){
-                    createUser.setPhoneString(phoneStr);
-                    createUser.setNameString(nameStr);
-                    createUser.setEmailString(mailStr);
+                    createUser.setUserCode(phoneStr);
+                    createUser.setNameStr(nameStr);
+                    createUser.setGenderStr(mailStr);
                     CreateUserResult myResult = createUser.createUserResult();
                     System.out.println("result: " + myResult);
                     if (myResult!=null){

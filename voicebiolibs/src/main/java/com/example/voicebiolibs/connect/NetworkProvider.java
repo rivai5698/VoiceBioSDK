@@ -8,7 +8,7 @@ import retrofit2.converter.gson.GsonConverterFactory;
 
 public class NetworkProvider {
     private static volatile NetworkProvider mInstance = null;
-    private final String BASE_URL = "https://api.nextiva.vn/";
+    private final String BASE_URL = "http://103.74.122.136:8050/";
     private final Retrofit retrofit;
 
     private NetworkProvider() {

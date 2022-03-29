@@ -2,32 +2,19 @@ package com.example.voicebiolibs.connect;
 
 import com.google.gson.annotations.SerializedName;
 
-import lombok.Data;
-import lombok.Getter;
-import lombok.Setter;
-
-/**
- *
- * @author thangth
- */
-@Getter
-@Setter
-@Data
-public class CreateUserResponse {
+public class EnrollUserResponse {
     @SerializedName("status")
     private Integer status;
     @SerializedName("msg")
     private String msg;
 
-    public Integer getStatus_code() {
+    public Integer getStatus() {
         return status;
     }
 
-    public void setStatus_code(Integer status) {
+    public void setStatus(Integer status) {
         this.status = status;
     }
-
-
 
     public String getMsg() {
         return msg;
@@ -39,14 +26,9 @@ public class CreateUserResponse {
 
     @Override
     public String toString() {
-        return "CreateUserResponse{" + "v=" + status + ", msg=" + msg + '}';
+        return "EnrollUserResponse{" +
+                "status=" + status +
+                ", msg='" + msg + '\'' +
+                '}';
     }
-
-
-
-
-
-
-
-
 }

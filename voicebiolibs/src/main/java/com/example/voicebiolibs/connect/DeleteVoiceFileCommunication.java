@@ -7,16 +7,11 @@ import retrofit2.http.Multipart;
 import retrofit2.http.POST;
 import retrofit2.http.Part;
 
-/**
- *
- * @author thangth
- */
-public interface Verify8KCommunication {
-    @POST("do_verify_8k")
+public interface DeleteVoiceFileCommunication {
+    @POST("enroll/delete_file")
     @Multipart
-    Call<Verify8KResponse> verify (
-            @Part("phone") RequestBody phone,
-            @Part MultipartBody.Part file
-
+    Call<DeleteVoiceFileResponse> del(
+            @Part("user_code") RequestBody user_code,
+            @Part("file_code") RequestBody file_code
     );
 }

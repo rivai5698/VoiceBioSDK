@@ -22,30 +22,30 @@ import retrofit2.Response;
  */
 public class CreateUser {
 
-    String nameString, phoneString, emailString;
+    String userCode, nameStr, genderStr;
 
-    public String getNameString() {
-        return nameString;
+    public String getUserCode() {
+        return userCode;
     }
 
-    public void setNameString(String nameString) {
-        this.nameString = nameString;
+    public void setUserCode(String userCode) {
+        this.userCode = userCode;
     }
 
-    public String getPhoneString() {
-        return phoneString;
+    public String getNameStr() {
+        return nameStr;
     }
 
-    public void setPhoneString(String phoneString) {
-        this.phoneString = phoneString;
+    public void setNameStr(String nameStr) {
+        this.nameStr = nameStr;
     }
 
-    public String getEmailString() {
-        return emailString;
+    public String getGenderStr() {
+        return genderStr;
     }
 
-    public void setEmailString(String emailString) {
-        this.emailString = emailString;
+    public void setGenderStr(String genderStr) {
+        this.genderStr = genderStr;
     }
 
     public CreateUserResult createUserResult() {
@@ -55,16 +55,16 @@ public class CreateUser {
             public CreateUserResult call() throws Exception {
                 CreateUserCommunication createUserCommunication = ModuleProvider.self().getRetrofit().create(CreateUserCommunication.class);
 
-                RequestBody name = RequestBody.create(MediaType.parse("multipart/form-data"), nameString);
-                RequestBody phone = RequestBody.create(MediaType.parse("multipart/form-data"), phoneString);
-                RequestBody email = RequestBody.create(MediaType.parse("multipart/form-data"), emailString);
+                RequestBody user_code = RequestBody.create(MediaType.parse("multipart/form-data"), userCode);
+                RequestBody name = RequestBody.create(MediaType.parse("multipart/form-data"), nameStr);
+                RequestBody gender = RequestBody.create(MediaType.parse("multipart/form-data"), genderStr);
 
-                Call<CreateUserResponse> call = createUserCommunication.createUser(name, phone, email);
+                Call<CreateUserResponse> call = createUserCommunication.createUser(user_code, name, gender);
                 Response<CreateUserResponse> response = call.execute();
                 CreateUserResult responseResult = new CreateUserResult();
                 switch (response.code()) {
                     case 200:
-                        //  System.out.println("res in: " + response.body());
+                        //System.out.println("res in: " + response.body());
                         responseResult.setMsg(response.body().getMsg());
                         responseResult.setStatus_code(response.body().getStatus_code());
                         break;

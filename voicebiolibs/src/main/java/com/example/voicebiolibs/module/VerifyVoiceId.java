@@ -3,8 +3,8 @@ package com.example.voicebiolibs.module;
 
 
 import com.example.voicebiolibs.connect.ModuleProvider;
-import com.example.voicebiolibs.connect.Verify8KCommunication;
-import com.example.voicebiolibs.connect.Verify8KResponse;
+import com.example.voicebiolibs.connect.VerifyVoiceCommunication;
+import com.example.voicebiolibs.connect.VerifyVoiceResponse;
 
 import java.io.File;
 import java.util.concurrent.Callable;
@@ -23,9 +23,9 @@ import retrofit2.Response;
  *
  * @author thangth
  */
-public class Verify8KVoiceId {
+public class VerifyVoiceId {
 
-    Verify8KResultResponse responseResult = new Verify8KResultResponse();
+    VerifyVoiceResultResponse responseResult = new VerifyVoiceResultResponse();
     String phoneStr;
     File myFileRecorder;
 
@@ -45,17 +45,17 @@ public class Verify8KVoiceId {
         this.myFileRecorder = myFileRecorder;
     }
 
-    public Verify8KResultResponse verify8KResultResponse() {
+    public VerifyVoiceResultResponse verify8KResultResponse() {
         ExecutorService threadPoll = Executors.newFixedThreadPool(1);
-        Future<Verify8KResultResponse> future = threadPoll.submit(new Callable<Verify8KResultResponse>() {
+        Future<VerifyVoiceResultResponse> future = threadPoll.submit(new Callable<VerifyVoiceResultResponse>() {
             @Override
-            public Verify8KResultResponse call() throws Exception {
-                Verify8KCommunication verifyService = ModuleProvider.self().getRetrofit().create(Verify8KCommunication.class);
+            public VerifyVoiceResultResponse call() throws Exception {
+                VerifyVoiceCommunication verifyService = ModuleProvider.self().getRetrofit().create(VerifyVoiceCommunication.class);
                 RequestBody phone = RequestBody.create(MediaType.parse("multipart/form-data"), phoneStr);
                 RequestBody requestFile = RequestBody.create(MediaType.parse("multipart/form-data"), myFileRecorder);
                 MultipartBody.Part reqFile1 = MultipartBody.Part.createFormData("file", myFileRecorder.getName(), requestFile);
-                Call<Verify8KResponse> call = verifyService.verify(phone, reqFile1);
-                Response<Verify8KResponse> response = call.execute();
+                Call<VerifyVoiceResponse> call = verifyService.verify(phone, reqFile1);
+                Response<VerifyVoiceResponse> response = call.execute();
 
                 switch (response.code()) {
                     case 200:
@@ -91,12 +91,12 @@ public class Verify8KVoiceId {
                 return responseResult;
             }
         });
-        Verify8KResultResponse responseResult = null;
+        VerifyVoiceResultResponse responseResult = null;
         try {
             responseResult = future.get(30, TimeUnit.SECONDS);
         } catch (Exception e) {
             e.printStackTrace();
-            responseResult = new Verify8KResultResponse();
+            responseResult = new VerifyVoiceResultResponse();
             responseResult.setMsg("System Error");
             responseResult.setScore(0.0);
         }

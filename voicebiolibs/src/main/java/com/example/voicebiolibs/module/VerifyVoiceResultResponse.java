@@ -4,7 +4,7 @@ package com.example.voicebiolibs.module;
  *
  * @author thangth
  */
-public class Verify8KResultResponse {
+public class VerifyVoiceResultResponse {
     Integer status_code;
     String msg;
     Double score;

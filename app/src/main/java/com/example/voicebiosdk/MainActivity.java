@@ -24,14 +24,17 @@ public class MainActivity extends AppCompatActivity {
     Button btnSignUp,btnRegister,btnVerify;
     CheckAuth checkAuth = new CheckAuth();
     String accessToken,phoneStr;
+    String checked;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        checkAuth.setApi_keyString("b432193c-57e6-41a6-968f-375c60b69fdd");
-
-        //System.out.println("Access-token: " + checkAuth.checkAuthResponse());
-        accessToken = checkAuth.checkAuthResponse().getAccess_token();
+        checkAuth.setUsername("sdk");
+        checkAuth.setPassword("123456aA@");
+        checked = getIntent().getStringExtra("checked");
+        System.out.println("Check: "+checked);
+        System.out.println("Access-token: " + checkAuth.checkAuthResponse());
+        accessToken = checkAuth.checkAuthResponse().getToken();
         phoneStr = getIntent().getStringExtra("phoneStr");
         if (!checkPermissionFromDevice())
             requestPermission();
@@ -114,7 +117,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void sendUserToRegister() {
-        Intent intent = new Intent(MainActivity.this,RegisterActivity.class);
+        Intent intent = new Intent(MainActivity.this,Register2.class);
         intent.putExtra("access_token",accessToken);
         intent.putExtra("phoneStr",phoneStr);
         startActivity(intent);
@@ -125,6 +128,7 @@ public class MainActivity extends AppCompatActivity {
         Intent intent = new Intent(MainActivity.this,SignUpActivity.class);
         intent.putExtra("access_token",accessToken);
         intent.putExtra("phoneStr",phoneStr);
+        intent.putExtra("checked",checked);
         startActivity(intent);
         finish();
     }
@@ -133,6 +137,8 @@ public class MainActivity extends AppCompatActivity {
         Intent intent = new Intent(MainActivity.this,VerifyActivity.class);
         intent.putExtra("access_token",accessToken);
         intent.putExtra("phoneStr",phoneStr);
+        intent.putExtra("checked",checked);
+
         startActivity(intent);
         finish();
     }

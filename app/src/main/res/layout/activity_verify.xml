@@ -8,52 +8,82 @@
     android:background="@color/white">
 
     <TextView
+        android:textColor="@color/colorPrimary"
+        android:textSize="25dp"
+        android:textStyle="bold"
         android:id="@+id/tv_verifyVID"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Verify Voice ID"
-        android:textColor="@color/black"
-        android:textSize="18dp"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintHorizontal_bias="0.207"
+        app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
-
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.093" />
-    <TextView
-        android:id="@+id/tv7"
-        android:layout_width="wrap_content"
+        app:layout_constraintVertical_bias="0.065" />
+    <LinearLayout
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Nhập số điện thoại: "
-        android:textColor="@color/black"
-        android:textSize="20dp"
-        android:textStyle="italic"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintHorizontal_bias="0.05"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.165" />
-
-    <EditText
-        android:id="@+id/et7"
-        android:layout_width="180dp"
-        android:layout_height="30dp"
-        android:background="@color/white"
-        android:hint="Số điện thoại"
-        android:inputType="number"
-        android:maxLength="10"
-        android:textColor="#161B21"
-
-        android:textSize="20dp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintHorizontal_bias="0.855"
+        app:layout_constraintHorizontal_bias="0"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_bias="0.165"
-        />
+        >
+        <TextView
+            android:id="@+id/tv7"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Số điện thoại: "
+            android:textColor="@color/black"
+            android:textSize="18dp"
+            android:textStyle="italic" />
+
+        <TextView
+            android:id="@+id/et7"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="10dp"
+            android:background="@color/white"
+            android:text="Chưa có số điện thoại"
+            android:textColor="#161B21"
+            android:textSize="18dp" />
+
+    </LinearLayout>
+<!--    <TextView-->
+<!--        android:id="@+id/tv7"-->
+<!--        android:layout_width="wrap_content"-->
+<!--        android:layout_height="wrap_content"-->
+<!--        android:text="Nhập số điện thoại: "-->
+<!--        android:textColor="@color/black"-->
+<!--        android:textSize="20dp"-->
+<!--        android:textStyle="italic"-->
+<!--        app:layout_constraintBottom_toBottomOf="parent"-->
+<!--        app:layout_constraintHorizontal_bias="0.05"-->
+<!--        app:layout_constraintLeft_toLeftOf="parent"-->
+<!--        app:layout_constraintRight_toRightOf="parent"-->
+<!--        app:layout_constraintTop_toTopOf="parent"-->
+<!--        app:layout_constraintVertical_bias="0.165" />-->
+
+<!--    <EditText-->
+<!--        android:id="@+id/et7"-->
+<!--        android:layout_width="180dp"-->
+<!--        android:layout_height="30dp"-->
+<!--        android:background="@color/white"-->
+<!--        android:hint="Số điện thoại"-->
+<!--        android:inputType="number"-->
+<!--        android:maxLength="10"-->
+<!--        android:textColor="#161B21"-->
+
+<!--        android:textSize="20dp"-->
+<!--        app:layout_constraintBottom_toBottomOf="parent"-->
+<!--        app:layout_constraintHorizontal_bias="0.05"-->
+<!--        app:layout_constraintLeft_toLeftOf="parent"-->
+<!--        app:layout_constraintRight_toRightOf="parent"-->
+<!--        app:layout_constraintTop_toTopOf="parent"-->
+<!--        app:layout_constraintVertical_bias="0.22"-->
+<!--        />-->
     <TextView
         android:id="@+id/tv_guideVerification"
         android:layout_width="wrap_content"
@@ -73,6 +103,8 @@
         android:gravity="center_horizontal" />
 
     <Button
+        android:background="@drawable/botron_button"
+        android:textColor="@color/white"
         android:id="@+id/btn_recordVV"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -88,6 +120,8 @@
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_bias="0.85" />
     <Button
+        android:background="@drawable/botron_button"
+        android:textColor="@color/white"
         android:id="@+id/btn_stopRecordVV"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -105,6 +139,8 @@
 
     <Button
         android:id="@+id/btn_ctnVV"
+        android:background="@drawable/botron_button"
+        android:textColor="@color/white"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:width="150dp"
@@ -186,20 +222,37 @@
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_bias="0.681" />
-
-    <Button
-        android:id="@+id/btn_VVback"
-        android:layout_width="124dp"
-        android:layout_height="44dp"
-        android:width="100dp"
-        android:height="100dp"
-        android:text="Quay lại"
-        android:textSize="15dp"
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintHorizontal_bias="1"
+        app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="1.0" />
+        app:layout_constraintVertical_bias="0.9"
+        >
+
+        <ImageView
+            android:id="@+id/btn_VVback"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:src="@drawable/ic_arrow_left"
+            android:layout_above="@id/swipeLeft"
+            android:layout_centerHorizontal="true"/>
+
+        <TextView
+            android:id="@+id/swipeLeft"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Quay lại"
+            android:textSize="15sp"
+            android:layout_centerHorizontal="true"
+            android:layout_alignParentBottom="true"
+            android:layout_marginBottom="20dp"/>
+
+    </RelativeLayout>
+
 
 </androidx.constraintlayout.widget.ConstraintLayout>

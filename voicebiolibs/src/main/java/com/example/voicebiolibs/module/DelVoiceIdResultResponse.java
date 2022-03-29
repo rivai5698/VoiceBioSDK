@@ -1,18 +1,14 @@
 package com.example.voicebiolibs.module;
 
-/**
- *
- * @author thangth
- */
-public class CreateUserResult {
+public class DelVoiceIdResultResponse {
     Integer status;
     String msg;
 
-    public Integer getStatus_code() {
+    public Integer getStatus() {
         return status;
     }
 
-    public void setStatus_code(Integer status) {
+    public void setStatus(Integer status) {
         this.status = status;
     }
 
@@ -24,17 +20,12 @@ public class CreateUserResult {
         this.msg = msg;
     }
 
+
     @Override
     public String toString() {
-        return "CreateUserResult{" + "status=" + status + ", msg=" + msg + '}';
+        return "DelVoiceIdResultResponse{" +
+                "status=" + status +
+                ", msg='" + msg + '\'' +
+                '}';
     }
-
-
-
-
-
-
-
-
-
 }

@@ -24,14 +24,22 @@ import retrofit2.Response;
 public class CheckAuth {
 
     TokenAccessGetting tokenAccessGetting = TokenAccessGetting.getInstance();
-    String api_keyString;
+    String usernameStr,passwordStr;
 
-    public String getApi_keyString() {
-        return api_keyString;
+    public String getUsername() {
+        return usernameStr;
     }
 
-    public void setApi_keyString(String api_keyString) {
-        this.api_keyString = api_keyString;
+    public void setUsername(String usernameStr) {
+        this.usernameStr = usernameStr;
+    }
+
+    public String getPassword() {
+        return passwordStr;
+    }
+
+    public void setPassword(String passwordStr) {
+        this.passwordStr = passwordStr;
     }
 
     public CheckAuthResponseResult checkAuthResponse() {
@@ -39,21 +47,27 @@ public class CheckAuth {
         Future<CheckAuthResponseResult> future = threadPoll.submit(new Callable<CheckAuthResponseResult>() {
             @Override
             public CheckAuthResponseResult call() throws Exception {
-                if (api_keyString != null) {
+                if (usernameStr != null&&passwordStr!=null) {
                     AuthCommunication authCommunication = NetworkProvider.self().getRetrofit().create(AuthCommunication.class);
-                    RequestBody api_key = RequestBody.create(MediaType.parse("multipart/form-data"), api_keyString);
-                    Call<CheckAuthResponse> call = authCommunication.checkAuth(api_key);
+                    RequestBody username = RequestBody.create(MediaType.parse("multipart/form-data"), usernameStr);
+                    RequestBody password = RequestBody.create(MediaType.parse("multipart/form-data"), passwordStr);
+
+                    Call<CheckAuthResponse> call = authCommunication.checkAuth(username,password);
+
                     Response<CheckAuthResponse> response = call.execute();
                     CheckAuthResponseResult responseResult = new CheckAuthResponseResult();
                     switch (response.code()) {
                         case 200:
                             responseResult.setResult("success");
-                            responseResult.setAccess_token(response.body().getAccess_token());
-                            responseResult.setToken_type(response.body().getToken_type());
-                            tokenAccessGetting.setToken(response.body().getAccess_token());
+                            responseResult.setMsg(response.body().getMsg());
+                            responseResult.setExpire_time(response.body().getExpire_time());
+                            responseResult.setStatus(response.body().getStatus());
+                            responseResult.setToken(response.body().getToken());
+
+                             tokenAccessGetting.setToken(response.body().getToken());
                             break;
                         case 401:
-                            responseResult.setResult("Incorrect api key");
+                            responseResult.setResult("Incorrect password or username");
                             break;
                         default:
                             responseResult.setResult("failed");
@@ -62,7 +76,7 @@ public class CheckAuth {
                     return responseResult;
                 }else{
                     CheckAuthResponseResult responseResult = new CheckAuthResponseResult();
-                    responseResult.setResult("Api key is missing");
+                    responseResult.setResult("error");
                     return responseResult;
                 }
             }

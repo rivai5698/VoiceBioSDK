@@ -13,18 +13,18 @@ import retrofit2.converter.gson.GsonConverterFactory;
 
 public class ModuleProvider {
     private static volatile ModuleProvider mInstance = null;
-    private String BASE_URL = "https://api.nextiva.vn/voicebio/";
+    private String BASE_URL = "http://103.74.122.136:8050/api/voicebio/";
     private final Retrofit retrofit;
     private String tokenString;
     TokenAccessGetting tokenAccessGetting = TokenAccessGetting.getInstance();
 
-    public String getTokenString() {
-        return tokenString;
-    }
-
-    public void setTokenString(String tokenString) {
-        this.tokenString = tokenString;
-    }
+//    public String getTokenString() {
+//        return tokenString;
+//    }
+//
+//    public void setTokenString(String tokenString) {
+//        this.tokenString = tokenString;
+//    }
 
     private ModuleProvider() {
         tokenString = tokenAccessGetting.getToken();

@@ -7,9 +7,10 @@ import retrofit2.http.POST;
 import retrofit2.http.Part;
 
 public interface AuthCommunication {
-    @POST("auth")
+    @POST("api/voicebio/auth")
     @Multipart
     Call<CheckAuthResponse> checkAuth(
-            @Part("api_key") RequestBody api_key
+            @Part("username") RequestBody username,
+            @Part("password") RequestBody password
     );
 }

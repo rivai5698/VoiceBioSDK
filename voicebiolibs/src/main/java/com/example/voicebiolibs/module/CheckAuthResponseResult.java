@@ -5,9 +5,11 @@ package com.example.voicebiolibs.module;
  * @author thangth
  */
 public class CheckAuthResponseResult {
-    String access_token;
-    String token_type;
     String result;
+    Integer status;
+    String msg;
+    String token;
+    Double expire_time;
 
     public String getResult() {
         return result;
@@ -17,30 +19,47 @@ public class CheckAuthResponseResult {
         this.result = result;
     }
 
-    public String getAccess_token() {
-        return access_token;
+    public Integer getStatus() {
+        return status;
     }
 
-    public void setAccess_token(String access_token) {
-        this.access_token = access_token;
+    public void setStatus(Integer status) {
+        this.status = status;
     }
 
-    public String getToken_type() {
-        return token_type;
+    public String getMsg() {
+        return msg;
     }
 
-    public void setToken_type(String token_type) {
-        this.token_type = token_type;
+    public void setMsg(String msg) {
+        this.msg = msg;
+    }
+
+    public String getToken() {
+        return token;
+    }
+
+    public void setToken(String token) {
+        this.token = token;
+    }
+
+    public Double getExpire_time() {
+        return expire_time;
+    }
+
+    public void setExpire_time(Double expire_time) {
+        this.expire_time = expire_time;
     }
 
     @Override
     public String toString() {
-        return "CheckAuthResponseResult{" + "access_token=" + access_token + ", token_type=" + token_type + ", result=" + result + '}';
+        return "CheckAuthResponseResult{" +
+                "result='" + result + '\'' +
+                ", status=" + status +
+                ", msg='" + msg + '\'' +
+                ", token='" + token + '\'' +
+                ", expire_time=" + expire_time +
+                '}';
     }
-
-
-
-
-
 }
 

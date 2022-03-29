@@ -11,12 +11,17 @@ import android.os.Environment;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
-
+//
+//import com.example.voicebiolibs.init.RecordFunction;
+//import com.example.voicebiolibs.module.Verify16KResultResponse;
+//import com.example.voicebiolibs.module.Verify16KVoiceId;
 import com.example.voicebiolibs.init.RecordFunction;
 import com.example.voicebiolibs.module.Verify16KResultResponse;
 import com.example.voicebiolibs.module.Verify16KVoiceId;
+import com.tapadoo.alerter.Alerter;
 
 import java.io.File;
 import java.io.IOException;
@@ -25,12 +30,13 @@ import java.util.TimerTask;
 import java.util.UUID;
 
 public class VerifyActivity extends AppCompatActivity {
-    String accessToken,phoneStr,pathSavePCM,pathSaveWAV;
+    String accessToken,phoneStr,pathSavePCM,pathSaveWAV,checked;
     RecordFunction recordFunction;
-    Button btnBack, btnRecord, btnStop,btnCtn;
+    Button  btnRecord, btnStop,btnCtn;
+    ImageView btnBack;
     Boolean clicked1 = false;
     TextView tvGuide,tvResultPercent,textView7;
-    EditText editText7;
+    TextView tv7;
     File fileWAV;
     Verify16KVoiceId verify16KVoiceId;
     @Override
@@ -38,6 +44,16 @@ public class VerifyActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_verify);
         accessToken = getIntent().getStringExtra("access_token");
+        phoneStr = getIntent().getStringExtra("phoneStr");
+        checked = getIntent().getStringExtra("checked");
+        if(checked==null){
+            showAlertTextOnlyError("Hãy đăng ký người dùng trước đó");
+        }else if (checked.equalsIgnoreCase("true")){
+            showAlertTextOnly("Đăng ký giọng nói thành công");
+            checked = "true1";
+        }else {
+            checked = "true1";
+        }
         recordFunction = new RecordFunction();
         initView();
     }
@@ -48,8 +64,9 @@ public class VerifyActivity extends AppCompatActivity {
         btnRecord = findViewById(R.id.btn_recordVV);
         btnStop = findViewById(R.id.btn_stopRecordVV);
         tvGuide = findViewById(R.id.tv_guideVerification);
-        textView7 = findViewById(R.id.tv7);
-        editText7 = findViewById(R.id.et7);
+        textView7 = findViewById(R.id.et7);
+        textView7.setText(phoneStr);
+//        editText7 = findViewById(R.id.et7);
 
         btnCtn.setEnabled(false);
         tvResultPercent = findViewById(R.id.tv_resultPercent);
@@ -125,13 +142,18 @@ public class VerifyActivity extends AppCompatActivity {
 
                 fileWAV = new File(pathSaveWAV);
 
-                phoneStr = editText7.getText().toString();
-                if (phoneStr.length()==10){
-                    textView7.setVisibility(View.INVISIBLE);
-                    editText7.setVisibility(View.INVISIBLE);
-                }else {
-                    Toast.makeText(VerifyActivity.this,"Vui lòng nhập lại số điện thoại",Toast.LENGTH_SHORT).show();
-                }
+//                phoneStr = editText7.getText().toString();
+//                if (phoneStr.length()==10){
+//                    textView7.setVisibility(View.INVISIBLE);
+//                    editText7.setVisibility(View.INVISIBLE);
+//                }else {
+//                    btnCtn.setVisibility(View.VISIBLE);
+//                    Toast.makeText(VerifyActivity.this,"Vui lòng nhập lại số điện thoại",Toast.LENGTH_SHORT).show();
+//                }
+
+
+
+
 //                checkAudio.setMyRecordFile(fileWAV);
 //                AudioCheckResultResponse aR = checkAudio.solveAudioFile();
 //
@@ -260,8 +282,8 @@ public class VerifyActivity extends AppCompatActivity {
 //                        });
 
 
-                phoneStr = editText7.getText().toString();
-                if (phoneStr.length()==10){
+         //       phoneStr = editText7.getText().toString();
+//                if (phoneStr.length()==10){
                     if(fileWAV!=null){
                         if(fileWAV.isFile()){
                             System.out.println("isFile");
@@ -273,7 +295,7 @@ public class VerifyActivity extends AppCompatActivity {
                     }
                     verify16KVoiceId.setMyFileRecorder(fileWAV);
                     verify16KVoiceId.setPhoneStr(phoneStr);
-                    Verify16KResultResponse rR = verify16KVoiceId.verify16KResultResponse();
+                Verify16KResultResponse rR = verify16KVoiceId.verify16KResultResponse();
                     System.out.println("result: "+rR);
 //                Double score = verifyVoiceId.verify16KResultResponse().getScore();
                     if(rR!=null){
@@ -284,14 +306,19 @@ public class VerifyActivity extends AppCompatActivity {
                         Float rPFloat = Float.valueOf(String.valueOf(rP));
 
                         if (rP==0.0){
-                            tvResultPercent.setTextColor(Color.RED);
-                            tvResultPercent.setText(rM+" "+rS);
+                            if(rS==null){
+                                tvResultPercent.setTextColor(Color.RED);
+                                tvResultPercent.setText(rM);
+                            }else {
+                                tvResultPercent.setTextColor(Color.RED);
+                                tvResultPercent.setText(rS);
+                            }
                         }else if(rPFloat>=90.0){
                             tvResultPercent.setTextColor(Color.GREEN);
-                            tvResultPercent.setText("Độ chính xác: "+"\n"+ rP+"%");
+                            tvResultPercent.setText("Điểm xác thực: "+"\n"+ rP);
                         }else {
                             tvResultPercent.setTextColor(Color.RED);
-                            tvResultPercent.setText("Độ chính xác: "+"\n"+ rP+"%");
+                            tvResultPercent.setText("Điểm xác thực: "+"\n"+ rP);
                         }
 
                         btnCtn.setVisibility(View.INVISIBLE);
@@ -301,10 +328,13 @@ public class VerifyActivity extends AppCompatActivity {
                         //   btnStop.setVisibility(View.INVISIBLE);
                         btnRecord.setVisibility(View.INVISIBLE);
                         System.out.println("rS: " + rS + " " +rP);
-                        Toast.makeText(VerifyActivity.this, rM, Toast.LENGTH_SHORT).show();
+                        if(rM.equalsIgnoreCase("success")){
+                            showAlertTextOnly(rM);
+                        }else {
+                            showAlertTextOnlyError(rM);
+                        }
                     }else {
-                        Toast.makeText(VerifyActivity.this,"Thất bại",Toast.LENGTH_SHORT).show();
-                        // filePCM.delete();
+                        showAlertTextOnlyError("Lỗi hệ thống");
                         btnBack.setEnabled(true);
                         //    btnStop.setVisibility(View.VISIBLE);
                         btnRecord.setVisibility(View.VISIBLE);
@@ -332,10 +362,10 @@ public class VerifyActivity extends AppCompatActivity {
                             });
                         }
                     }, 500);
-                }else {
-                    Toast.makeText(VerifyActivity.this,"Vui lòng nhập lại số điện thoại",Toast.LENGTH_SHORT).show();
-                    btnBack.setEnabled(true);
-                }
+//                }else {
+//                    Toast.makeText(VerifyActivity.this,"Vui lòng nhập lại số điện thoại",Toast.LENGTH_SHORT).show();
+//                    btnBack.setEnabled(true);
+//                }
 
             }
         });
@@ -367,6 +397,7 @@ public class VerifyActivity extends AppCompatActivity {
         Intent mainIntent = new Intent(VerifyActivity.this, MainActivity.class);
         mainIntent.putExtra("access_token", accessToken);
         mainIntent.putExtra("phoneStr",phoneStr);
+        mainIntent.putExtra("checked",checked);
         startActivity(mainIntent);
         finish();
     }
@@ -377,7 +408,18 @@ public class VerifyActivity extends AppCompatActivity {
         Intent mainIntent = new Intent(VerifyActivity.this, MainActivity.class);
         mainIntent.putExtra("access_token", accessToken);
         mainIntent.putExtra("phoneStr",phoneStr);
+        mainIntent.putExtra("checked",checked);
         startActivity(mainIntent);
         finish();
+    }
+    private void showAlertTextOnly(String msg){
+        Alerter.create(this).setBackgroundColorRes(R.color.colorAccent)
+                .setText(msg)
+                .show();
+    }
+    private void showAlertTextOnlyError(String msg){
+        Alerter.create(this).setBackgroundColorRes(R.color.redColor)
+                .setText(msg)
+                .show();
     }
 }
