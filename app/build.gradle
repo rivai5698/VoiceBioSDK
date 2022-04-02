@@ -35,7 +35,7 @@ dependencies {
     implementation 'androidx.appcompat:appcompat:1.3.0'
     implementation 'com.google.android.material:material:1.3.0'
     implementation 'androidx.constraintlayout:constraintlayout:2.0.4'
-//    implementation 'com.github.rivai5698:VoiceBioSDK:1.0.0'
+//    implementation 'com.github.rivai5698:VoiceBioSDK:1.0.1'
     implementation project(path: ':voicebiolibs')
     implementation "org.jetbrains.kotlin:kotlin-stdlib:1.4.30"
     implementation project(path: ':voicebiolibs')

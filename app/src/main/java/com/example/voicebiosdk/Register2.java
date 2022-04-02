@@ -25,12 +25,13 @@ public class Register2 extends AppCompatActivity {
 
     Button btnCtn;
     ImageView btnBack;
-    EditText etPhone,etName,etMail;
-    String phoneStr,nameStr,mailStr;
-    Boolean checkProgress=false;
+    EditText etPhone, etName, etMail;
+    String phoneStr, nameStr;
+    Boolean checkProgress = false;
     String accessToken;
     CreateUser createUser = new CreateUser();
     String checked;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -39,11 +40,12 @@ public class Register2 extends AppCompatActivity {
 
         initView();
     }
+
     private void initView() {
         btnCtn = findViewById(R.id.btn_register3);
         etPhone = findViewById(R.id.et_phone);
         etName = findViewById(R.id.et_name);
-        etMail = findViewById(R.id.et_mail);
+        // etMail = findViewById(R.id.et_mail);
         btnBack = findViewById(R.id.im_back);
         //   btnBack2 = findViewById(R.id.btnBack2);
         btnCtn.setOnClickListener(new View.OnClickListener() {
@@ -54,64 +56,92 @@ public class Register2 extends AppCompatActivity {
 
                 phoneStr = etPhone.getText().toString();
                 nameStr = etName.getText().toString();
-                mailStr = etMail.getText().toString();
-                if (phoneStr.length() == 10 && nameStr.length() > 0 && mailStr.length() > 0) {
+//                mailStr = etMail.getText().toString();
+                if (phoneStr.length() > 0 && nameStr.length() > 0) {
                     createUser.setUserCode(phoneStr);
                     createUser.setNameStr(nameStr);
-                    createUser.setGenderStr(mailStr);
                     CreateUserResult myResult = createUser.createUserResult();
                     System.out.println("result: " + myResult);
                     if (myResult != null) {
-                        if(myResult.getStatus_code()!=null){
+                        if (myResult.getStatus_code() != null) {
                             switch (myResult.getStatus_code()) {
                                 case 0:
                                     checkProgress = true;
                                     checked = "true";
-                                    sendUserToSignUp();
+                                    showAlertTextOnly("Đăng ký thành công");
+                                    checked = "true2";
+                                    checkProgress = true;
+                                    Timer buttonTimer = new Timer();
+                                    buttonTimer.schedule(new TimerTask() {
+
+                                        @Override
+                                        public void run() {
+                                            runOnUiThread(new Runnable() {
+
+                                                @Override
+                                                public void run() {
+                                                    sendUserToSignUp();
+                                                }
+                                            });
+                                        }
+                                    }, 1000);
                                     break;
                                 case 400:
-                                    showAlertTextOnlyError("User_code đã được sử dụng");
+                                    showAlertTextOnly("Mã người dùng hoặc số điện thoại đã được sử dụng");
                                     checked = "true2";
                                     checkProgress = true;
-                                    sendUserToSignUp();
-                                    break;
-                                case 2:
-                                    showAlertTextOnlyError("Số điện thoại chưa đúng định dạng");
-                                    checkProgress = true;
-                                    break;
-                                case 3:
-                                    showAlertTextOnlyError("Số điện thoại đã tồn tại");
+                                    Timer buttonTimer2 = new Timer();
+                                    buttonTimer2.schedule(new TimerTask() {
 
-                                    checked = "true2";
-                                    sendUserToSignUp();
-                                    checkProgress = true;
+                                        @Override
+                                        public void run() {
+                                            runOnUiThread(new Runnable() {
+
+                                                @Override
+                                                public void run() {
+                                                    sendUserToSignUp();
+                                                }
+                                            });
+                                        }
+                                    }, 1000);
                                     break;
-                                case 4:
-                                    showAlertTextOnlyError("Email đã tồn tại");
-                                    checkProgress = true;
-                                    break;
+//                                case 2:
+//                                    showAlertTextOnlyError("Số điện thoại chưa đúng định dạng");
+//                                    checkProgress = true;
+//                                    break;
+//                                case 3:
+//                                    showAlertTextOnlyError("Số điện thoại đã tồn tại");
+//
+//                                    checked = "true2";
+//                                    sendUserToSignUp();
+//                                    checkProgress = true;
+//                                    break;
+//                                case 4:
+//                                    showAlertTextOnlyError("Email đã tồn tại");
+//                                    checkProgress = true;
+//                                    break;
                                 default:
                                     showAlertTextOnlyError("Lỗi hệ thống");
                                     checkProgress = true;
                             }
-                        }else {
+                        } else {
                             showAlertTextOnly("Lỗi hệ thống");
                         }
 
                     }
-                } else if (phoneStr.length() < 10&&phoneStr.length()>0) {
-                    showAlertTextOnlyError("Vui lòng nhập đúng định dạng số điện thoại");
-                    checkProgress = true;
                 }
+//                else if (phoneStr.length() <= 0) {
+//                    showAlertTextOnlyError("Vui lòng nhập đúng định dạng số điện thoại");
+//                    checkProgress = true;
+//                }
 //                else if(phoneStr.length() ==0) {
 //                    showAlertTextOnly("Vui lòng nhập đúng định dạng số điện thoại");
 //                    checkProgress = true;
 //                }
-                else
-                 {
-                    showAlertTextOnlyError("Vui lòng điền đầy đủ thông tin");
-                    checkProgress = true;
-                }
+//                else {
+//                    showAlertTextOnlyError("Vui lòng điền đầy đủ thông tin");
+//                    checkProgress = true;
+//                }
 
                 if (checkProgress) {
 
@@ -158,21 +188,22 @@ public class Register2 extends AppCompatActivity {
         });
 
     }
+
     private void sendUsertoMain() {
 
         Intent mainIntent = new Intent(Register2.this, MainActivity.class);
-        mainIntent.putExtra("access_token",accessToken);
-        mainIntent.putExtra("phoneStr",phoneStr);
-        mainIntent.putExtra("checked",checked);
+        mainIntent.putExtra("access_token", accessToken);
+        mainIntent.putExtra("phoneStr", phoneStr);
+        mainIntent.putExtra("checked", checked);
         startActivity(mainIntent);
         finish();
     }
 
     private void sendUserToSignUp() {
-        Intent intent = new Intent(Register2.this,SignUpActivity.class);
-        intent.putExtra("access_token",accessToken);
-        intent.putExtra("phoneStr",phoneStr);
-        intent.putExtra("checked",checked);
+        Intent intent = new Intent(Register2.this, SignUpActivity.class);
+        intent.putExtra("access_token", accessToken);
+        intent.putExtra("phoneStr", phoneStr);
+        intent.putExtra("checked", checked);
         startActivity(intent);
         finish();
     }
@@ -182,19 +213,19 @@ public class Register2 extends AppCompatActivity {
         // your code.
 
         Intent mainIntent = new Intent(Register2.this, MainActivity.class);
-        mainIntent.putExtra("access_token",accessToken);
-        mainIntent.putExtra("phoneStr",phoneStr);
+        mainIntent.putExtra("access_token", accessToken);
+        mainIntent.putExtra("phoneStr", phoneStr);
         startActivity(mainIntent);
         finish();
     }
 
-    private void showAlertTextOnly(String msg){
+    private void showAlertTextOnly(String msg) {
         Alerter.create(this).setBackgroundColorRes(R.color.colorAccent)
                 .setText(msg)
                 .show();
     }
 
-    private void showAlertTextOnlyError(String msg){
+    private void showAlertTextOnlyError(String msg) {
         Alerter.create(this).setBackgroundColorRes(R.color.redColor)
                 .setText(msg)
                 .show();

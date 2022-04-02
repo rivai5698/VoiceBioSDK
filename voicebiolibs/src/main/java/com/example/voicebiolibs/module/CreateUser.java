@@ -57,9 +57,9 @@ public class CreateUser {
 
                 RequestBody user_code = RequestBody.create(MediaType.parse("multipart/form-data"), userCode);
                 RequestBody name = RequestBody.create(MediaType.parse("multipart/form-data"), nameStr);
-                RequestBody gender = RequestBody.create(MediaType.parse("multipart/form-data"), genderStr);
+//                RequestBody gender = RequestBody.create(MediaType.parse("multipart/form-data"), genderStr);
 
-                Call<CreateUserResponse> call = createUserCommunication.createUser(user_code, name, gender);
+                Call<CreateUserResponse> call = createUserCommunication.createUser(user_code, name);
                 Response<CreateUserResponse> response = call.execute();
                 CreateUserResult responseResult = new CreateUserResult();
                 switch (response.code()) {

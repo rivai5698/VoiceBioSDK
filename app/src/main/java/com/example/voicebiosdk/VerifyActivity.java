@@ -39,6 +39,7 @@ public class VerifyActivity extends AppCompatActivity {
     Boolean clicked1 = false;
     TextView tvGuide,tvResultPercent,textView7;
     TextView tv7;
+    EditText etPhone;
     File fileWAV;
     VerifyVoiceId verify16KVoiceId;
     @Override
@@ -48,10 +49,18 @@ public class VerifyActivity extends AppCompatActivity {
         accessToken = getIntent().getStringExtra("access_token");
         phoneStr = getIntent().getStringExtra("phoneStr");
         checked = getIntent().getStringExtra("checked");
+        etPhone = findViewById(R.id.et_phone2);
+        textView7 = findViewById(R.id.et7);
+        textView7.setText(phoneStr);
+
         if(checked==null){
-            showAlertTextOnlyError("Hãy đăng ký người dùng trước đó");
+           // showAlertTextOnlyError("Hãy đăng ký người dùng trước đó");
+            checked="true2";
+            etPhone.setVisibility(View.VISIBLE);
         }else if (checked.equalsIgnoreCase("true")){
-            showAlertTextOnly("Đăng ký giọng nói thành công");
+            etPhone.setVisibility(View.VISIBLE);
+            etPhone.setText(phoneStr);
+           // showAlertTextOnly("Đăng ký giọng nói thành công");
             checked = "true1";
         }else {
             checked = "true1";
@@ -66,8 +75,7 @@ public class VerifyActivity extends AppCompatActivity {
         btnRecord = findViewById(R.id.btn_recordVV);
         btnStop = findViewById(R.id.btn_stopRecordVV);
         tvGuide = findViewById(R.id.tv_guideVerification);
-        textView7 = findViewById(R.id.et7);
-        textView7.setText(phoneStr);
+
 //        editText7 = findViewById(R.id.et7);
 
         btnCtn.setEnabled(false);
@@ -76,6 +84,10 @@ public class VerifyActivity extends AppCompatActivity {
         btnRecord.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+
+
+
+
                     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
                         pathSavePCM = Environment.getExternalStoragePublicDirectory( Environment.DIRECTORY_DOWNLOADS) +"/"+ UUID.randomUUID().toString() + "_audio_record.pcm";
                         pathSaveWAV = Environment.getExternalStoragePublicDirectory( Environment.DIRECTORY_DOWNLOADS) +"/"+UUID.randomUUID().toString() + "_audio_record.wav";
@@ -196,7 +208,24 @@ public class VerifyActivity extends AppCompatActivity {
 //            }
 
 
-                btnCtn.setEnabled(true);
+
+
+                Timer buttonTimer = new Timer();
+                buttonTimer.schedule(new TimerTask() {
+
+                    @Override
+                    public void run() {
+
+                        runOnUiThread(new Runnable() {
+
+                            @Override
+                            public void run() {
+                                btnCtn.setEnabled(true);
+                            }
+                        });
+                    }
+                }, 1000);
+
                 btnBack.setEnabled(true);
 //                    btnStop.setEnabled(true);
 //                    btnPlay.setEnabled(true);
@@ -210,8 +239,8 @@ public class VerifyActivity extends AppCompatActivity {
 //                System.out.println("file path: -----------" + fileWAV.getAbsolutePath());
 
 
-                Timer buttonTimer = new Timer();
-                buttonTimer.schedule(new TimerTask() {
+                Timer buttonTimer2 = new Timer();
+                buttonTimer2.schedule(new TimerTask() {
 
                     @Override
                     public void run() {
@@ -231,8 +260,209 @@ public class VerifyActivity extends AppCompatActivity {
         btnCtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                System.out.println("file path: -----------" + fileWAV.getAbsolutePath());
                 btnBack.setEnabled(false);
-                verify16KVoiceId = new VerifyVoiceId();
+                if(checked.equalsIgnoreCase("true2")){
+                    phoneStr = etPhone.getText().toString();
+                }else {
+                    phoneStr = textView7.getText().toString();
+                }
+                System.out.println("phone: "+ phoneStr);
+                if (phoneStr != null) {
+                    verify16KVoiceId = new VerifyVoiceId();
+                    if(fileWAV!=null){
+                        if(fileWAV.isFile()){
+                            System.out.println("isFile");
+                        }else {
+                            System.out.println("notFile");
+                        }
+                    }else {
+                        System.out.println("nullFile");
+                    }
+
+                    if(phoneStr.length()>0){
+                        verify16KVoiceId.setFileName(fileWAV);
+                        verify16KVoiceId.setUserCode(phoneStr);
+                        verify16KVoiceId.setIsFilter("true");
+                        VerifyVoiceResultResponse rR = verify16KVoiceId.verifyResultResponse();
+                        System.out.println("result: "+rR);
+                Float score = verify16KVoiceId.verifyResultResponse().getScore();
+                    if(rR!=null){
+
+                        Integer rS = rR.getStatus();
+                        Float rP = rR.getScore();
+                        String rM = rR.getMsg();
+                        String rC = rR.getCode();
+                        Float rPFloat = Float.valueOf(String.valueOf(rP));
+
+                        if (rP==0.0){
+                            if(rS==null){
+                                tvResultPercent.setTextColor(Color.RED);
+                                tvResultPercent.setText(rM);
+                            }else {
+                                tvResultPercent.setTextColor(Color.RED);
+                                switch (rC){
+                                    case "0":
+                                        showAlertTextOnly("Thành công");
+                                        break;
+                                    case "1":
+                                        tvResultPercent.setText("Nói không rõ từ, yêu cầu nói rõ hơn");
+                                        break;
+                                    case "2":
+                                        tvResultPercent.setText("Nói quá nhỏ, yêu cầu nói to hơn");
+                                        break;
+                                    case "3":
+                                        tvResultPercent.setText("Môi trường nhiễu, yêu cầu ghi âm ở môi trường yên tĩnh hơn");
+                                        break;
+                                    case "4":
+                                        tvResultPercent.setText("Độ dài audio không đủ 2s, yêu cầu ghi âm dài hơn");
+                                        break;
+                                    case "5":
+                                        tvResultPercent.setText("Nói không đủ số từ tối thiểu, yêu cầu nói nhiều từ hơn");
+                                        break;
+                                    case "6":
+                                        tvResultPercent.setText("Độ dài audio quá dài (hơn 20p), yêu cầu nói ngắn lại");
+                                        break;
+                                    case "7":
+                                        tvResultPercent.setText("Lỗi khác");
+                                        break;
+                                    default:
+                                        tvResultPercent.setText("Lỗi hệ thống");
+                                }
+
+                            }
+                        }else if(rPFloat>=80.0){
+                            tvResultPercent.setTextColor(Color.GREEN);
+                            tvResultPercent.setText("Điểm xác thực: "+"\n"+ rP);
+                        }else {
+                            tvResultPercent.setTextColor(Color.RED);
+                            tvResultPercent.setText("Điểm xác thực: "+"\n"+ rP);
+                        }
+
+
+                        btnCtn.setVisibility(View.INVISIBLE);
+                        tvResultPercent.setVisibility(View.VISIBLE);
+                        btnBack.setEnabled(true);
+                        // filePCM.delete();
+                        //   btnStop.setVisibility(View.INVISIBLE);
+                        btnRecord.setVisibility(View.INVISIBLE);
+                        System.out.println("rS: " + rS + " " +rP);
+                        if(rC!=null){
+                            if(rC.equalsIgnoreCase("")){
+                                showAlertTextOnly(rM);
+                                btnRecord.setVisibility(View.VISIBLE);
+                                btnRecord.setEnabled(true);
+                            }else {
+                                switch (rC){
+                                    case "0":
+                                        showAlertTextOnly("Thành công");
+                                        btnRecord.setVisibility(View.VISIBLE);
+                                        btnRecord.setEnabled(true);
+                                        break;
+                                    case "1":
+                                        showAlertTextOnlyError("Nói không rõ từ, yêu cầu nói rõ hơn");
+                                        btnRecord.setVisibility(View.VISIBLE);
+                                        btnRecord.setEnabled(true);
+                                        break;
+                                    case "2":
+                                        showAlertTextOnlyError("Nói quá nhỏ, yêu cầu nói to hơn");
+                                        btnRecord.setVisibility(View.VISIBLE);
+                                        btnRecord.setEnabled(true);
+                                        break;
+                                    case "3":
+                                        showAlertTextOnlyError("Môi trường nhiễu, yêu cầu ghi âm ở môi trường yên tĩnh hơn");
+                                        btnRecord.setVisibility(View.VISIBLE);
+                                        btnRecord.setEnabled(true);
+                                        break;
+                                    case "4":
+                                        showAlertTextOnlyError("Độ dài audio không đủ 2s, yêu cầu ghi âm dài hơn");
+                                        btnRecord.setVisibility(View.VISIBLE);
+                                        btnRecord.setEnabled(true);
+                                        break;
+                                    case "5":
+                                        showAlertTextOnlyError("Nói không đủ số từ tối thiểu, yêu cầu nói nhiều từ hơn");
+                                        btnRecord.setVisibility(View.VISIBLE);
+                                        btnRecord.setEnabled(true);
+                                        break;
+                                    case "6":
+                                        showAlertTextOnlyError("Độ dài audio quá dài (hơn 20p), yêu cầu nói ngắn lại");
+                                        btnRecord.setVisibility(View.VISIBLE);
+                                        btnRecord.setEnabled(true);
+                                        break;
+                                    case "7":
+                                        showAlertTextOnlyError("Lỗi khác");
+                                        btnRecord.setVisibility(View.VISIBLE);
+                                        btnRecord.setEnabled(true);
+                                        break;
+                                    default:
+                                        btnRecord.setVisibility(View.VISIBLE);
+                                        btnRecord.setEnabled(true);
+                                        showAlertTextOnlyError("Lỗi hệ thống");
+                                }
+                            }
+                        }else {
+                            showAlertTextOnlyError("Lỗi hệ thống");
+                            btnRecord.setVisibility(View.VISIBLE);
+                            btnRecord.setEnabled(true);
+                        }
+
+                    }else {
+                        showAlertTextOnlyError("Lỗi hệ thống");
+                        btnBack.setEnabled(true);
+                        //    btnStop.setVisibility(View.VISIBLE);
+                        btnRecord.setVisibility(View.VISIBLE);
+                        //    btnPlay.setVisibility(View.VISIBLE);
+                    }
+                    }else {
+                        showAlertTextOnlyError("Vui lòng nhập mã người dùng hoặc số điện thoại");
+                    }
+
+//                Double score = verifyVoiceId.verify16KResultResponse().getScore();
+//                    if(rR!=null){
+//
+//                        Integer rS = rR.getStatus();
+//                        Float rP = rR.getScore();
+//                        String rM = rR.getMsg();
+//                        Float rPFloat = Float.valueOf(String.valueOf(rP));
+//
+//                        if (rP==0.0){
+//                            if(rS==null){
+//                                tvResultPercent.setTextColor(Color.RED);
+//                                tvResultPercent.setText(rM);
+//                            }else {
+//                                tvResultPercent.setTextColor(Color.RED);
+//                                tvResultPercent.setText(rS);
+//                            }
+//                        }else if(rPFloat>=90.0){
+//                            tvResultPercent.setTextColor(Color.GREEN);
+//                            tvResultPercent.setText("Điểm xác thực: "+"\n"+ rP);
+//                        }else {
+//                            tvResultPercent.setTextColor(Color.RED);
+//                            tvResultPercent.setText("Điểm xác thực: "+"\n"+ rP);
+//                        }
+//
+//                        btnCtn.setVisibility(View.INVISIBLE);
+//                        tvResultPercent.setVisibility(View.VISIBLE);
+//                        btnBack.setEnabled(true);
+//                        // filePCM.delete();
+//                        //   btnStop.setVisibility(View.INVISIBLE);
+//                        btnRecord.setVisibility(View.INVISIBLE);
+//                        System.out.println("rS: " + rS + " " +rP);
+//                        if(rM.equalsIgnoreCase("success")){
+//                            showAlertTextOnly(rM);
+//                        }else {
+//                            showAlertTextOnlyError(rM);
+//                        }
+//                    }else {
+//                        showAlertTextOnlyError("Lỗi hệ thống");
+//                        btnBack.setEnabled(true);
+//                        //    btnStop.setVisibility(View.VISIBLE);
+//                        btnRecord.setVisibility(View.VISIBLE);
+//                        //    btnPlay.setVisibility(View.VISIBLE);
+//                    }
+                }
+
+
 //                btnStop.setEnabled(false);
 //                btnPlay.setEnabled(false);
 //                VerifyCommunication verifyService = NetworkProvider.self().getRetrofit().create(VerifyCommunication.class);
@@ -286,63 +516,7 @@ public class VerifyActivity extends AppCompatActivity {
 
          //       phoneStr = editText7.getText().toString();
 //                if (phoneStr.length()==10){
-                    if(fileWAV!=null){
-                        if(fileWAV.isFile()){
-                            System.out.println("isFile");
-                        }else {
-                            System.out.println("notFile");
-                        }
-                    }else {
-                        System.out.println("nullFile");
-                    }
-                    verify16KVoiceId.setFileName(fileWAV);
-                    verify16KVoiceId.setUserCode("0859685545");
-                    verify16KVoiceId.setIsFilter("true");
-                VerifyVoiceResultResponse rR = verify16KVoiceId.verifyResultResponse();
-                    System.out.println("result: "+rR);
-//                Double score = verifyVoiceId.verify16KResultResponse().getScore();
-                    if(rR!=null){
 
-                        Integer rS = rR.getStatus();
-                        Float rP = rR.getScore();
-                        String rM = rR.getMsg();
-                        Float rPFloat = Float.valueOf(String.valueOf(rP));
-
-                        if (rP==0.0){
-                            if(rS==null){
-                                tvResultPercent.setTextColor(Color.RED);
-                                tvResultPercent.setText(rM);
-                            }else {
-                                tvResultPercent.setTextColor(Color.RED);
-                                tvResultPercent.setText(rS);
-                            }
-                        }else if(rPFloat>=90.0){
-                            tvResultPercent.setTextColor(Color.GREEN);
-                            tvResultPercent.setText("Điểm xác thực: "+"\n"+ rP);
-                        }else {
-                            tvResultPercent.setTextColor(Color.RED);
-                            tvResultPercent.setText("Điểm xác thực: "+"\n"+ rP);
-                        }
-
-                        btnCtn.setVisibility(View.INVISIBLE);
-                        tvResultPercent.setVisibility(View.VISIBLE);
-                        btnBack.setEnabled(true);
-                        // filePCM.delete();
-                        //   btnStop.setVisibility(View.INVISIBLE);
-                        btnRecord.setVisibility(View.INVISIBLE);
-                        System.out.println("rS: " + rS + " " +rP);
-                        if(rM.equalsIgnoreCase("success")){
-                            showAlertTextOnly(rM);
-                        }else {
-                            showAlertTextOnlyError(rM);
-                        }
-                    }else {
-                        showAlertTextOnlyError("Lỗi hệ thống");
-                        btnBack.setEnabled(true);
-                        //    btnStop.setVisibility(View.VISIBLE);
-                        btnRecord.setVisibility(View.VISIBLE);
-                        //    btnPlay.setVisibility(View.VISIBLE);
-                    }
 
 
 
@@ -364,7 +538,7 @@ public class VerifyActivity extends AppCompatActivity {
                                 }
                             });
                         }
-                    }, 500);
+                    }, 2000);
 //                }else {
 //                    Toast.makeText(VerifyActivity.this,"Vui lòng nhập lại số điện thoại",Toast.LENGTH_SHORT).show();
 //                    btnBack.setEnabled(true);

@@ -32,26 +32,48 @@
         app:layout_constraintVertical_bias="0.165"
         >
         <TextView
+
+            android:visibility="invisible"
             android:id="@+id/tv7"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
             android:text="Số điện thoại: "
             android:textColor="@color/black"
             android:textSize="18dp"
             android:textStyle="italic" />
 
         <TextView
+            android:visibility="invisible"
             android:id="@+id/et7"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
             android:layout_marginLeft="10dp"
             android:background="@color/white"
             android:text="Chưa có số điện thoại"
             android:textColor="#161B21"
             android:textSize="18dp" />
 
+
+        <EditText
+            android:id="@+id/et_phone2"
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:hint="Mã người dùng hoặc số điện thoại"
+            android:maxLength="10"
+            android:layout_marginLeft="20dp"
+            android:layout_marginRight="20dp"
+            android:layout_marginBottom="10dp"
+            android:padding="15dp"
+            android:singleLine="true"
+            android:background="@drawable/et_custom"
+            android:textSize="15sp" />
+
+
     </LinearLayout>
-<!--    <TextView-->
+
+
+
+    <!--    <TextView-->
 <!--        android:id="@+id/tv7"-->
 <!--        android:layout_width="wrap_content"-->
 <!--        android:layout_height="wrap_content"-->
@@ -89,7 +111,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:width="300dp"
-        android:text="Bấm nút ghi âm và nói một câu bất kỳ tối thiểu 3s, sau đó bấm nút hoàn thành"
+        android:text="Bấm nút ghi âm và nói một câu bất kỳ tối thiểu 5s, sau đó bấm nút hoàn thành"
         android:textAlignment="center"
         android:textColor="@color/black"
         android:textSize="20dp"

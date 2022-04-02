@@ -277,10 +277,10 @@ public class RecordFunction {
                         @Override
                         public void onClick(View v) {
                             if(mP.isPlaying()){
-                                btnPlay.setText("Play");
+                                btnPlay.setText("Paused");
                                 mP.pause();
                             }else{
-                                btnPlay.setText("Pause");
+                                btnPlay.setText("Playing");
                                 mP.start();
                             }
                         }

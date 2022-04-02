@@ -17,8 +17,8 @@ public interface CreateUserCommunication {
     Call<CreateUserResponse> createUser(
 
             @Part("user_code") RequestBody user_code,
-            @Part("name") RequestBody name,
-            @Part("gender") RequestBody gender
+            @Part("name") RequestBody name
+            //@Part("gender") RequestBody gender
     );
 }
 

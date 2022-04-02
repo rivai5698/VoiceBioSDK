@@ -43,7 +43,7 @@ public class MainActivity extends AppCompatActivity {
 
     private void initView() {
         btnRegister = findViewById(R.id.btn_register);
-        btnSignUp = findViewById(R.id.btn_signup);
+       // btnSignUp = findViewById(R.id.btn_signup);
         btnVerify = findViewById(R.id.btn_verify);
         
         btnVerify.setOnClickListener(new View.OnClickListener() {
@@ -68,27 +68,27 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-        btnSignUp.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                sendUserToSignUp();
-                Timer buttonTimer = new Timer();
-                buttonTimer.schedule(new TimerTask() {
-
-                    @Override
-                    public void run() {
-
-                        runOnUiThread(new Runnable() {
-
-                            @Override
-                            public void run() {
-                                btnSignUp.setEnabled(true);
-                            }
-                        });
-                    }
-                }, 500);
-            }
-        });
+//        btnSignUp.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                sendUserToSignUp();
+//                Timer buttonTimer = new Timer();
+//                buttonTimer.schedule(new TimerTask() {
+//
+//                    @Override
+//                    public void run() {
+//
+//                        runOnUiThread(new Runnable() {
+//
+//                            @Override
+//                            public void run() {
+//                                btnSignUp.setEnabled(true);
+//                            }
+//                        });
+//                    }
+//                }, 500);
+//            }
+//        });
 
         btnRegister.setOnClickListener(new View.OnClickListener() {
             @Override

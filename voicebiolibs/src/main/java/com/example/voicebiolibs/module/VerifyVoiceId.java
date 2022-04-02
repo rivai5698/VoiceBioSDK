@@ -66,18 +66,43 @@ public class VerifyVoiceId {
                 RequestBody is_filter = RequestBody.create(MediaType.parse("multipart/form-data"), isFilter);
                 Call<VerifyVoiceResponse> call = verifyService.verify(user_code, reqFile1,is_filter);
                 Response<VerifyVoiceResponse> response = call.execute();
-
+                System.out.println("res in: " + response.body());
                 switch (response.code()) {
                     case 200:
-                         System.out.println("res in: " + response.body());
-                        responseResult.setCode(response.body().getCode());
-                        responseResult.setStatus(response.body().getStatus());
-                        responseResult.setMsg(response.body().getMsg());
-                        responseResult.setMatching(response.body().getResult().getMatching());
-                        responseResult.setIs_proofing(response.body().getIs_proofing());
-                        responseResult.setThreshold(response.body().getResult().getThreshold());
-                        responseResult.setMatching(response.body().getResult().getMatching());
-                        responseResult.setScore(response.body().getResult().getScore());
+                        System.out.println("Stt: "+response.body().getStatus());
+                        if(response.body().getStatus()==0){
+                            System.out.println("Score: "+response.body().getResult().getScore());
+                            responseResult.setCode(response.body().getCode());
+                            responseResult.setStatus(response.body().getStatus());
+                            responseResult.setMsg(response.body().getMsg());
+                            responseResult.setMatching(response.body().getResult().getMatching());
+                            responseResult.setIs_proofing(response.body().getIs_proofing());
+                            responseResult.setThreshold(response.body().getResult().getThreshold());
+                            responseResult.setScore(response.body().getResult().getScore());
+                        }else {
+                            float a = 0;
+                            responseResult.setCode(response.body().getCode());
+                            responseResult.setStatus(response.body().getStatus());
+                            responseResult.setMsg(response.body().getMsg());
+                            responseResult.setMatching(false);
+                            responseResult.setIs_proofing(false);
+                            responseResult.setThreshold(a);
+                            responseResult.setScore(a);
+                        }
+//                        switch (response.body().getStatus()){
+//                            case 0:
+//
+//                            case 400:
+//
+//                            default:
+//                                responseResult.setCode(response.body().getCode());
+//                                responseResult.setStatus(response.body().getStatus());
+//                                responseResult.setMsg(response.body().getMsg());
+//                        }
+
+
+
+
 
 //                        if (response.body().getStatus_code() == 1) {
 //                            Double score = Math.round(response.body().getScore() * 100.0) / 100.0;
